@@ -1,0 +1,31 @@
+---Subquery ---
+---Find guests who paid more than the average payment amount---
+
+SELECT g.guest_id, g.name
+FROM Guests g
+JOIN Reservations r ON g.guest_id = r.guest_id
+JOIN Payments p ON r.reservation_id = p.reservation_id
+WHERE p.amount > (SELECT AVG(amount) FROM Payments);
+
+--Subquery with IN--
+--Find guests who have used any service--
+
+SELECT name 
+FROM Guests
+WHERE guest_id IN (
+    SELECT guest_id FROM GuestServices
+);
+
+--Subquery with EXISTS--
+SELECT g.guest_id, g.name
+FROM Guests g
+WHERE EXISTS (
+    SELECT 1 
+    FROM Reservations r
+    WHERE r.guest_id = g.guest_id
+);
+
+--Subquery with = --
+SELECT *
+FROM Rooms
+WHERE price = (SELECT MAX(price) FROM Rooms);
